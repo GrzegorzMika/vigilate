@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  rdbms:
+    image: timescale/timescaledb:latest-pg14
+    restart: on-failure
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=password
+      - TS_TUNE_MAX_CONNS=1000
+      - POSTGRES_DB=vigilate
+    volumes:
+      - ./rdbms_data:/var/lib/postgresql/data
+
+  pusher:
+    image: ipe
+    build:
+      context: ./ipe
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports:
+      - "4001:4001"
+      - "4343:4343"
+      - "5000:5000"
